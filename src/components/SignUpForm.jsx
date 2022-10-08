@@ -21,7 +21,7 @@ export default function SignUpForm() {
         />
       <input type="password" {...register("password")} placeholder='Digite sua senha'/>
       <button type='submit'>
-        Enviar
+        Criar minha conta
       </button>
       </div>
     </form>
