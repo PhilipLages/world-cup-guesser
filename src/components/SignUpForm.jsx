@@ -1,8 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import "../styles/login.css";
+import '../styles/forms.css';
 
-export default function LoginForm() {
+export default function SignUpForm() {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
@@ -11,7 +11,9 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={ handleSubmit(onSubmit) }>
-      <div className='login-inputs'>
+      <div className='form-inputs'>
+        <input type="text" {...register("name")} placeholder='Digite seu nome'/>
+        <input type="text" {...register("username")} placeholder='Digite um nome de usuário'/>
         <input 
          type="email" 
          {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
