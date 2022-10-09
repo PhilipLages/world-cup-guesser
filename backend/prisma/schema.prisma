@@ -27,22 +27,24 @@ model User {
 
 model Game {
   id String @id @default(cuid())
-  teamA String 
-  teamB String
-  matchTime DateTime
+  homeTeam String 
+  awayTeam String
+  gameTime DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt  
 
   guesses Guess[]
+
+  @@unique([homeTeam, awayTeam, gameTime])
 }
 
 model Guess {
   id String @id @default(cuid())
   userId String
   gameId String
-  scoreTeamA Int
-  scoreTeamB Int
+  homeTeamScore Int
+  awayTeamScore Int
 
   user User @relation(fields: [userId], references: [id])
   game Game @relation(fields: [gameId], references: [id])
