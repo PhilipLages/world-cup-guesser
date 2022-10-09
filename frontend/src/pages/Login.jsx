@@ -4,7 +4,7 @@ import LoginForm from '../components/LoginForm';
 
 export default function Login() {
   return (
-    <section>
+    <>
       <header>
         <div>
           <Link to={"/"}>
@@ -16,6 +16,6 @@ export default function Login() {
       <main>
         <LoginForm />
       </main>
-    </section>
+    </>
   )
 }

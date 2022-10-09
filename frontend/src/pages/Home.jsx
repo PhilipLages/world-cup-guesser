@@ -1,10 +1,10 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
-    <section>
-            <div>
+    <>
+      <div>
         <Link to={"/signup"}>
           Criar minha conta
         </Link>
@@ -14,6 +14,6 @@ export default function Home() {
           Entrar
         </Link>
       </div>
-    </section>
+    </>
   )
 }

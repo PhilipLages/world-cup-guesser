@@ -2,11 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from "../assets/logo/logo-fundo-branco.svg";
 import MatchesCard from '../components/MatchesCard';
+import ScheduleDate from '../components/ScheduleDate';
 import "../styles/dashboard.css"
 
 export default function Dashboard() {
   return (
-    <section>
+    <>
       <header>
         <div>
           <img src={ logo } alt="Logo" />          
@@ -19,11 +20,7 @@ export default function Dashboard() {
         <h3>Qual é o seu palpite?</h3>
       </header>
       <main>
-        <div className="dates" >
-          <img src='src/assets/icons/arrow-left.svg'></img>
-          <span>24 de Novembro</span>
-          <img src='src/assets/icons/arrow-right.svg'></img>
-        </div>
+        <ScheduleDate />
         <section className='container'>
           <MatchesCard 
           teamA={{ slug: 'sui' }}
@@ -42,6 +39,6 @@ export default function Dashboard() {
           />
         </section>
       </main>
-    </section>
+    </>
   )
 }
