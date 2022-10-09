@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/PhilipLages/world-cup-guesser/issues"
   },
-  "homepage": "https://github.com/PhilipLages/world-cup-guesser#readme"
+  "homepage": "https://github.com/PhilipLages/world-cup-guesser#readme",
+  "dependencies": {
+    "koa": "^2.13.4"
+  }
 }
