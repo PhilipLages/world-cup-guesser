@@ -1,2 +1,3 @@
-# world-cup-guesser
-Application which the user can guess matches results for the next world cup
+# NaTrave API
+
+Project developed at the Full Stack Challenge of Codar.me

@@ -1,0 +1,38 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "application backend",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r dotenv-safe/config server.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/PhilipLages/world-cup-guesser.git"
+  },
+  "author": "Philip Lages <https://philiplages.github.io/>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PhilipLages/world-cup-guesser/issues"
+  },
+  "homepage": "https://github.com/PhilipLages/world-cup-guesser#readme",
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "@koa/router": "^12.0.0",
+    "@prisma/client": "^4.4.0",
+    "bcrypt": "^5.1.0",
+    "date-fns": "^2.29.3",
+    "dotenv-safe": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0"
+  },
+  "devDependencies": {
+    "prisma": "^4.4.0"
+  }
+}
