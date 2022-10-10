@@ -18,19 +18,22 @@ export default function Profile() {
 
   const params = useParams();
 
-  const [guesses, fetchGuesses] = useAsyncFn(async () => {
+  const [{ value: user, loading, error }, fetchGuesses] = useAsyncFn(async () => {
     const response = await axios({
       method: "get",
       baseURL: "http://localhost:4000",
       url: `/${params.userName}`
     });
 
-    const guesses = response.data.reduce((acc, curr) => {
+    const guesses = response.data.guesses.reduce((acc, curr) => {
       acc[curr.gameId] = curr;
       return acc;
     }, {});
 
-    return guesses;
+    return {
+      ...response.data,
+      guesses,
+    };
   });
   
   const [games, fetchGames] = useAsyncFn( async (params) => {
@@ -44,7 +47,10 @@ export default function Profile() {
     return response.data;
   });
   
-  const logout = () => setAuth({});
+  const logout = () => {
+    setAuth({});
+    navigate("/login");
+  } 
 
   useEffect(() => {
     fetchGuesses();
@@ -54,28 +60,25 @@ export default function Profile() {
     fetchGames({ gameTime: date });
   }, [date]);
 
-  const isLoading = games.loading || guesses.loading;
-  const hasError = games.error || guesses.error;
+  const isLoading = games.loading || loading;
+  const hasError = games.error || error;
   const isDone = !isLoading && !hasError;
 
   const navigate = useNavigate();
-
-
-  if(!auth?.user?.id) {
-    navigate("/");
-  }
 
   return (
     <>
        <header>
         <div>
           <img src={ logo } alt="Logo" />
-          <button type='button' onClick={ logout }>Sair</button>          
+          {auth?.user?.id && (
+            <button type='button' onClick={ logout }>Sair</button> 
+          )}
         </div>
         <div>
           <Link to={"/dashboard"}>Voltar</Link>
         </div>
-        <p>{ `Olá, ${ auth.user.name }` }</p>
+        <p>{ `${ user?.name }` }</p>
       </header>
       <main>
         <h3>Seus palpites</h3>
@@ -92,8 +95,8 @@ export default function Profile() {
               homeTeam={ game.homeTeam }
               awayTeam={ game.awayTeam }
               gameTime={ format(new Date(game.gameTime), "H:mm") }
-              homeTeamScore={ guesses?.value?.[game.id]?.homeTeamScore || '' }
-              awayTeamScore={ guesses?.value?.[game.id]?.awayTeamScore || '' }
+              homeTeamScore={ user?.guesses?.[game.id]?.homeTeamScore || '' }
+              awayTeamScore={ user?.guesses?.[game.id]?.awayTeamScore || '' }
               disabled={ true }
             />
           ))}

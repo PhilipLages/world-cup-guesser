@@ -15,19 +15,22 @@ export default function Dashboard() {
   const [date, setDate] = useState(initialDate);
   const [auth, setAuth] = useLocalStorage('auth', {});
 
-  const [guesses, fetchGuesses] = useAsyncFn(async () => {
+  const [{ value: user, loading, error }, fetchGuesses] = useAsyncFn(async () => {
     const response = await axios({
       method: "get",
       baseURL: "http://localhost:4000",
       url: `/${auth.user.userName}`
     });
 
-    const guesses = response.data.reduce((acc, curr) => {
+    const guesses = response.data.guesses.reduce((acc, curr) => {
       acc[curr.gameId] = curr;
       return acc;
     }, {});
 
-    return guesses;
+    return {
+      ...response.data,
+      guesses,
+    };
   });
   
   const [games, fetchGames] = useAsyncFn( async (params) => {
@@ -39,9 +42,7 @@ export default function Dashboard() {
     });
 
     return response.data;
-  });
-  
-  const logout = () => setAuth({});
+  });  
 
   useEffect(() => {
     fetchGuesses();
@@ -51,8 +52,8 @@ export default function Dashboard() {
     fetchGames({ gameTime: date });
   }, [date]);
 
-  const isLoading = games.loading || guesses.loading;
-  const hasError = games.error || guesses.error;
+  const isLoading = games.loading || loading;
+  const hasError = games.error || error;
   const isDone = !isLoading && !hasError;
 
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ export default function Dashboard() {
           <Link to={"/home"}>Voltar</Link>
           <Link to={`/${auth.user?.userName}`}>Perfil</Link>
         </div>
-        <p>{ `Olá, ${ auth.user.name }` }</p>
+        <p>{ `Olá, ${ user?.name }` }</p>
         <h3>Qual é o seu palpite?</h3>
       </header>
       <main>
@@ -89,8 +90,8 @@ export default function Dashboard() {
               homeTeam={ game.homeTeam }
               awayTeam={ game.awayTeam }
               gameTime={ format(new Date(game.gameTime), "H:mm") }
-              homeTeamScore={ guesses?.value?.[game.id]?.homeTeamScore || '' }
-              awayTeamScore={ guesses?.value?.[game.id]?.awayTeamScore || '' }
+              homeTeamScore={ user?.guesses?.[game.id]?.homeTeamScore || '' }
+              awayTeamScore={ user?.guesses?.[game.id]?.awayTeamScore || '' }
             />
           ))}
         </section>
