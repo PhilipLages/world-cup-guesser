@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import SignUpForm from '../components/SignUpForm'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import SignUpForm from '../components/SignUpForm';
 
 export default function SignUp() {
   return (
