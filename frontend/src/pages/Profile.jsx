@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { format, formatISO } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useLocalStorage, useAsyncFn } from 'react-use';
 import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo/logo-fundo-branco.svg";
@@ -14,9 +14,26 @@ const initialDate = formatISO(new Date(2022, 10, 20));
 
 export default function Profile() {
   const [date, setDate] = useState(initialDate);
-
   const [auth, setAuth] = useLocalStorage('auth', {});
-  const [state, doFetch] = useAsyncFn( async (params) => {
+
+  const params = useParams();
+
+  const [guesses, fetchGuesses] = useAsyncFn(async () => {
+    const response = await axios({
+      method: "get",
+      baseURL: "http://localhost:4000",
+      url: `/${params.userName}`
+    });
+
+    const guesses = response.data.reduce((acc, curr) => {
+      acc[curr.gameId] = curr;
+      return acc;
+    }, {});
+
+    return guesses;
+  });
+  
+  const [games, fetchGames] = useAsyncFn( async (params) => {
     const response = await axios({
       method: "get",
       baseURL: "http://localhost:4000",
@@ -26,14 +43,23 @@ export default function Profile() {
 
     return response.data;
   });
+  
+  const logout = () => setAuth({});
 
   useEffect(() => {
-    doFetch({ gameTime: date });
-  }, [date])
+    fetchGuesses();
+  }, [])
+
+  useEffect(() => {
+    fetchGames({ gameTime: date });
+  }, [date]);
+
+  const isLoading = games.loading || guesses.loading;
+  const hasError = games.error || guesses.error;
+  const isDone = !isLoading && !hasError;
 
   const navigate = useNavigate();
 
-  const logout = () => setAuth({});
 
   if(!auth?.user?.id) {
     navigate("/");
@@ -47,7 +73,7 @@ export default function Profile() {
           <button type='button' onClick={ logout }>Sair</button>          
         </div>
         <div>
-          <Link to={"/home"}>Voltar</Link>
+          <Link to={"/dashboard"}>Voltar</Link>
         </div>
         <p>{ `Olá, ${ auth.user.name }` }</p>
       </header>
@@ -56,15 +82,19 @@ export default function Profile() {
         <section>
         <ScheduleDate date={ date } setDate={ setDate }/>
         <section className='container'>
-          {state.loading && "Carregando partidas..."}
-          {state.error && "Ops! Algo deu errado."}
-          {!state.loading && !state.error && state.value?.map(game => (
+          {isLoading && "Carregando partidas..."}
+          {hasError && "Ops! Algo deu errado."}
+
+          {isDone && games.value?.map(game => (
             <MatchesCard 
-            key={game.id}
-            gameId={ game.id }
-            homeTeam={ game.homeTeam }
-            awayTeam={ game.awayTeam }
-            gameTime={ format(new Date(game.gameTime), "H:mm") }
+              key={game.id}
+              gameId={ game.id }
+              homeTeam={ game.homeTeam }
+              awayTeam={ game.awayTeam }
+              gameTime={ format(new Date(game.gameTime), "H:mm") }
+              homeTeamScore={ guesses?.value?.[game.id]?.homeTeamScore || '' }
+              awayTeamScore={ guesses?.value?.[game.id]?.awayTeamScore || '' }
+              disabled={ true }
             />
           ))}
         </section>
