@@ -4,16 +4,20 @@ import { useForm } from 'react-hook-form';
 import '../styles/forms.css';
 
 export default function SignUpForm() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     const response = await axios({
       method: "post",
       baseURL: 'http://localhost:4000',
       url: "/users",
       data,
-    })
-    console.log(response.data);
+    });
+    localStorage.setItem('auth', JSON.stringify(response.data))
+    setIsLoading(false);
   }
 
   const [ name, userName, email, password ] = watch(["name", "userName", "email", "password"]);
@@ -59,7 +63,7 @@ export default function SignUpForm() {
       />
       <span>{errors.password?.message}</span>
       <button type='submit' disabled={!isValid}>
-        Criar minha conta
+        {isLoading ? "Carregando..." : "Criar minha conta"}
       </button>
       </div>
     </form>

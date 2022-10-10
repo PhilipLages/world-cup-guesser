@@ -1,15 +1,30 @@
 import React from 'react';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import "../styles/forms.css";
+import { useState } from 'react';
 
 export default function LoginForm() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    navigate("/dashboard");
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    const response = await axios({
+      method: "get",
+      baseURL: 'http://localhost:4000',
+      url: "/login",
+      auth: {
+        username: data.email,
+        password: data.password,
+      }
+    });
+    localStorage.setItem('auth', JSON.stringify(response.data))
+    setIsLoading(false);
+    // navigate("/dashboard");
   }
 
   return (
@@ -17,12 +32,20 @@ export default function LoginForm() {
       <div className='form-inputs'>
         <input 
          type="email" 
-         {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
+         {...register("email", { 
+          pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: "Informe um e-mail válido"
+          }})}
          placeholder='Digite seu email' 
         />
-      <input type="password" {...register("password")} placeholder='Digite sua senha'/>
+      <input 
+      type="password" 
+      {...register("password")} 
+      placeholder='Digite sua senha'
+      />
       <button type='submit'>
-        Entrar
+        {isLoading ? "Carregando..." : "Entrar"}
       </button>
       </div>
     </form>
