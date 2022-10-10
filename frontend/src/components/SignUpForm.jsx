@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { useLocalStorage } from 'react-use';
 import { useForm } from 'react-hook-form';
 import '../styles/forms.css';
 
 export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
 
+  const [auth, setAuth] = useLocalStorage('auth', {});
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
 
   const onSubmit = async (data) => {
@@ -16,8 +18,12 @@ export default function SignUpForm() {
       url: "/users",
       data,
     });
-    localStorage.setItem('auth', JSON.stringify(response.data))
+    setAuth(response.data);
     setIsLoading(false);
+  }
+  
+  if(auth?.user?.id) {
+    navigate("/dashboard");
   }
 
   const [ name, userName, email, password ] = watch(["name", "userName", "email", "password"]);

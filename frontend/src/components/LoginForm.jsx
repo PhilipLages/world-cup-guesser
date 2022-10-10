@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { useLocalStorage } from 'react-use';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import "../styles/forms.css";
@@ -8,6 +9,7 @@ import { useState } from 'react';
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
 
+  const [auth, setAuth] = useLocalStorage('auth', {});
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
@@ -22,9 +24,12 @@ export default function LoginForm() {
         password: data.password,
       }
     });
-    localStorage.setItem('auth', JSON.stringify(response.data))
+    setAuth(response.data);
     setIsLoading(false);
-    // navigate("/dashboard");
+  }
+  
+  if(auth?.user?.id) {
+    navigate("/dashboard");
   }
 
   return (
