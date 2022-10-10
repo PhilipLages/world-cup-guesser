@@ -55,6 +55,26 @@ export const createGuess = async ctx => {
   } catch(error) {
     ctx.status = 401;
     return;
+  }  
+}
+
+export const listGuesses = async ctx => {
+  const userName = ctx.request.params.userName;
+
+  const user = await prisma.user.findUnique({
+    where: { userName }
+  });
+
+  if (!user) {
+    ctx.status = 404;
+    return;
   }
-  
+
+  const guesses = await prisma.guess.findMany({
+    where: {
+      userId: user.id
+    }
+  });
+
+  ctx.body = guesses;
 }
