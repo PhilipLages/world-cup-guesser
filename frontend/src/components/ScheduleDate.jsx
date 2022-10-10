@@ -1,24 +1,21 @@
 import React from 'react'
-import { addDays, format, subDays } from 'date-fns';
+import { addDays, format, subDays, formatISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useState } from 'react';
 
-const initialDate = '2022-11-20T00:00:00Z';
-
-export default function ScheduleDate() {
-  const [date, setDate] = useState(new Date(initialDate));
-
+export default function ScheduleDate({ date, setDate }) {
+  const newDate = new Date(date);
+  
   const getNextDay = () => {
-   const nextDay =  addDays(date, 1);
-   setDate(nextDay);
+   const nextDay =  addDays(newDate, 1);
+   setDate(formatISO(nextDay));
   }
 
   const getPrevDay = () => {
-    const prevDay = subDays(date, 1);
-    setDate(prevDay);
+    const prevDay = subDays(newDate, 1);
+    setDate(formatISO(prevDay));
   }
 
-  const formatedDate = format(date, "d 'de' MMMM" , { locale: ptBR });
+  const formatedDate = format(new Date(date), "d 'de' MMMM" , { locale: ptBR });
 
   return (
     <div className="dates" >
