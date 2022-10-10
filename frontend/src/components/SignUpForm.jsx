@@ -14,7 +14,7 @@ export default function SignUpForm() {
     setIsLoading(true);
     const response = await axios({
       method: "post",
-      baseURL: 'http://localhost:4000',
+      baseURL: import.meta.env.VITE_API_URL,
       url: "/users",
       data,
     });

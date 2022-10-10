@@ -17,7 +17,7 @@ export default function MatchesCard({ gameId, homeTeam, awayTeam, gameTime, home
     onSubmit: (values) => {
       axios({
         method: "post",
-        baseURL: "http://localhost:4000",
+        baseURL: import.meta.env.VITE_API_URL,
         url: '/guesses',
         headers: {
           authorization: `Bearer ${auth.accessToken}`

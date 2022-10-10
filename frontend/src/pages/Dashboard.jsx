@@ -18,7 +18,7 @@ export default function Dashboard() {
   const [{ value: user, loading, error }, fetchGuesses] = useAsyncFn(async () => {
     const response = await axios({
       method: "get",
-      baseURL: "http://localhost:4000",
+      baseURL: import.meta.env.VITE_API_URL,
       url: `/${auth.user.userName}`
     });
 
@@ -36,7 +36,7 @@ export default function Dashboard() {
   const [games, fetchGames] = useAsyncFn( async (params) => {
     const response = await axios({
       method: "get",
-      baseURL: "http://localhost:4000",
+      baseURL: import.meta.env.VITE_API_URL,
       url: "/games",
       params
     });

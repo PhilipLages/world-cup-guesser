@@ -17,7 +17,7 @@ export default function LoginForm() {
     setIsLoading(true);
     const response = await axios({
       method: "get",
-      baseURL: 'http://localhost:4000',
+      baseURL: import.meta.env.VITE_API_URL,
       url: "/login",
       auth: {
         username: data.email,

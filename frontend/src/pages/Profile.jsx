@@ -9,7 +9,6 @@ import ScheduleDate from '../components/ScheduleDate';
 import MatchesCard from '../components/MatchesCard';
 import "../styles/dashboard.css";
 
-
 const initialDate = formatISO(new Date(2022, 10, 20));
 
 export default function Profile() {
@@ -21,7 +20,7 @@ export default function Profile() {
   const [{ value: user, loading, error }, fetchGuesses] = useAsyncFn(async () => {
     const response = await axios({
       method: "get",
-      baseURL: "http://localhost:4000",
+      baseURL: import.meta.env.VITE_API_URL,
       url: `/${params.userName}`
     });
 
@@ -39,7 +38,7 @@ export default function Profile() {
   const [games, fetchGames] = useAsyncFn( async (params) => {
     const response = await axios({
       method: "get",
-      baseURL: "http://localhost:4000",
+      baseURL: import.meta.env.VITE_API_URL,
       url: "/games",
       params
     });
